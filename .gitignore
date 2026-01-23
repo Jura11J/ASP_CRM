@@ -1,0 +1,45 @@
+# System / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Dotnet build
+*/bin/
+*/obj/
+*.user
+*.rsuser
+*.suo
+*.cache
+*.ldb
+*.log
+
+# NuGet
+packages/
+*.nupkg
+
+# Java / Maven
+**/target/
+*.iml
+*.class
+
+# Payara / server artefacts
+*.war
+*.ear
+
+# Docker / temp
+*.pid
+*.tar
+_tmp*/
+
+# Coverage / test
+coverage/
+TestResults/
+
+# Local data
+infra/pgdata/
+
+# OS generated
+ehthumbs.db
+Icon?
+
