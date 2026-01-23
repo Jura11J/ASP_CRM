@@ -1,0 +1,61 @@
+@model Ticket
+@{
+    ViewData["Title"] = "Nowe zgłoszenie";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Nowe zgłoszenie</h2>
+    <a class="btn btn-outline-secondary" asp-action="Index">Powrót</a>
+</div>
+
+<div class="card p-4">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="CustomerId" class="form-label"></label>
+                <select asp-for="CustomerId" class="form-select" asp-items="ViewBag.Customers">
+                    <option value="">-- wybierz klienta --</option>
+                </select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Priority" class="form-label"></label>
+                <select asp-for="Priority" class="form-select">
+                    @foreach (TicketPriority priority in Enum.GetValues(typeof(TicketPriority)))
+                    {
+                        <option value="@priority">@priority.GetDisplayName()</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-select">
+                    @foreach (TicketStatus status in Enum.GetValues(typeof(TicketStatus)))
+                    {
+                        <option value="@status">@status.GetDisplayName()</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end gap-2">
+            <a class="btn btn-outline-secondary" asp-action="Index">Anuluj</a>
+            <button type="submit" class="btn btn-primary">Zapisz</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

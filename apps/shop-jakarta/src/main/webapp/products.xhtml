@@ -1,0 +1,53 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/layout.xhtml">
+    <ui:define name="title">Katalog produktów</ui:define>
+    <ui:define name="content">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h:form styleClass="row gy-3 align-items-end">
+                    <div class="col-md-4">
+                        <h:outputLabel for="query" value="Szukaj (nazwa / SKU)" styleClass="form-label"/>
+                        <h:inputText id="query" value="#{productBean.query}" styleClass="form-control" placeholder="np. Monitor"/>
+                    </div>
+                    <div class="col-md-2">
+                        <h:outputLabel for="sort" value="Sortowanie" styleClass="form-label"/>
+                        <h:selectOneMenu id="sort" value="#{productBean.sortBy}" styleClass="form-select">
+                            <f:selectItem itemLabel="Nazwa A-Z" itemValue="nameAsc"/>
+                            <f:selectItem itemLabel="Cena rosnąco" itemValue="priceAsc"/>
+                            <f:selectItem itemLabel="Cena malejąco" itemValue="priceDesc"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="col-md-2 form-check mt-4">
+                        <h:selectBooleanCheckbox id="stock" value="#{productBean.onlyInStock}" styleClass="form-check-input me-2"/>
+                        <h:outputLabel for="stock" value="Tylko dostępne" styleClass="form-check-label"/>
+                    </div>
+                    <div class="col-md-2 form-check mt-4">
+                        <h:selectBooleanCheckbox id="inactive" value="#{productBean.showInactive}" styleClass="form-check-input me-2"/>
+                        <h:outputLabel for="inactive" value="Pokaż nieaktywne" styleClass="form-check-label"/>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <h:commandButton value="Filtruj" action="#{productBean.search}" styleClass="btn btn-primary"/>
+                        <h:commandButton value="Reset" action="#{productBean.resetFilters}" styleClass="btn btn-link"/>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-3">
+            <ui:repeat value="#{productBean.products}" var="p">
+                <ui:include src="/WEB-INF/templates/product-card.xhtml">
+                    <ui:param name="prod" value="#{p}"/>
+                </ui:include>
+            </ui:repeat>
+        </div>
+
+        <div class="text-center mt-4">
+            <h:form>
+                <h:commandButton value="Załaduj więcej" action="#{productBean.nextPage}" rendered="#{productBean.hasMore}" styleClass="btn btn-outline-primary"/>
+            </h:form>
+        </div>
+    </ui:define>
+</ui:composition>

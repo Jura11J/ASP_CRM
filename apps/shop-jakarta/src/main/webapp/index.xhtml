@@ -1,0 +1,130 @@
+﻿<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/layout.xhtml">
+    <ui:define name="title">Sklep internetowy</ui:define>
+    <ui:define name="content">
+
+        <!-- dekoracyjne tła -->
+        <div class="bg-blob blob-1"></div>
+        <div class="bg-blob blob-2"></div>
+        <div class="bg-blob blob-3"></div>
+
+        <!-- HERO -->
+        <section class="hero glass p-4 p-lg-5 mb-5">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7">
+                    <p class="kicker">Nowa kolekcja</p>
+                    <h1 class="display-5 fw-bolder mb-3">Zamawiaj produkty prosto z CRM</h1>
+                    <p class="lead text-light-50 mb-4">Przeglądaj ofertę, dodawaj do koszyka i składaj zamówienia online. Statusy zsynchronizowane z CRM.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a class="btn btn-hero" href="products.jsf">Przeglądaj produkty</a>
+                        <a class="btn btn-outline-light" href="orders.jsf">Sprawdź zamówienie</a>
+                    </div>
+                    <div class="d-flex flex-wrap gap-4 mt-4 text-light-60">
+                        <div><i class="bi bi-shield-check me-1"></i> Wspólna baza z CRM</div>
+                        <div><i class="bi bi-clock-history me-1"></i> Statusy na żywo</div>
+                        <div><i class="bi bi-truck me-1"></i> Szybka realizacja</div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="glass mini-card">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <p class="text-light-60 mb-1">Aktywne produkty</p>
+                                <h2 class="text-white fw-bold">#{homeBean.featured.size()}+</h2>
+                            </div>
+                            <span class="badge bg-light text-dark">Live</span>
+                        </div>
+                        <div class="progress progress-thin mb-3">
+                            <div class="progress-bar" role="progressbar" style="width: 80%"></div>
+                        </div>
+                        <p class="text-light-60 mb-3">Historia zamówień wspólna z CRM. Dane z tej samej bazy PostgreSQL.</p>
+                        <div class="d-flex gap-2">
+                            <a class="btn btn-sm btn-outline-light" href="orders.jsf">Sprawdź zamówienie</a>
+                            <a class="btn btn-sm btn-outline-light" href="account.jsf">Moje konto</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- szybkie skróty -->
+        <section class="mb-5">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="glass shortcut d-flex align-items-center gap-3">
+                        <div class="icon-circle bg-primary-subtle text-primary"><i class="bi bi-search"></i></div>
+                        <div>
+                            <h6 class="mb-1">Szybkie wyszukiwanie</h6>
+                            <small class="text-muted">Filtruj po nazwie lub SKU, tylko aktywne lub dostępne.</small>
+                        </div>
+                        <a href="products.jsf" class="btn btn-sm btn-outline-primary ms-auto">Szukaj</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass shortcut d-flex align-items-center gap-3">
+                        <div class="icon-circle bg-success-subtle text-success"><i class="bi bi-bag-check"></i></div>
+                        <div>
+                            <h6 class="mb-1">Koszyk sesyjny</h6>
+                            <small class="text-muted">Bez zakładania konta, zapis w sesji do checkout.</small>
+                        </div>
+                        <a href="cart.jsf" class="btn btn-sm btn-outline-success ms-auto">Koszyk</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass shortcut d-flex align-items-center gap-3">
+                        <div class="icon-circle bg-warning-subtle text-warning"><i class="bi bi-receipt"></i></div>
+                        <div>
+                            <h6 class="mb-1">Status zamówienia</h6>
+                            <small class="text-muted">Podgląd historii statusów prosto z CRM.</small>
+                        </div>
+                        <a href="orders.jsf" class="btn btn-sm btn-outline-warning ms-auto">Sprawdź</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- polecane -->
+        <section class="mb-5">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <p class="eyebrow">Dla Ciebie</p>
+                    <h3 class="section-title">Polecane produkty</h3>
+                </div>
+                <a href="products.jsf" class="btn btn-outline-primary btn-sm">Zobacz katalog</a>
+            </div>
+            <div class="row row-cols-1 row-cols-md-4 g-3">
+                <ui:repeat value="#{homeBean.featured}" var="p" varStatus="st">
+                    <ui:fragment rendered="#{st.index lt 4}">
+                        <ui:include src="/WEB-INF/templates/product-card.xhtml">
+                            <ui:param name="prod" value="#{p}"/>
+                        </ui:include>
+                    </ui:fragment>
+                </ui:repeat>
+            </div>
+        </section>
+
+        <!-- nowości -->
+        <section class="mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <p class="eyebrow">Świeże dostawy</p>
+                    <h3 class="section-title">Nowości i najczęściej kupowane</h3>
+                </div>
+                <a href="products.jsf" class="btn btn-link">Pełna lista</a>
+            </div>
+            <div class="row row-cols-1 row-cols-md-4 g-3">
+                <ui:repeat value="#{homeBean.newest}" var="p" varStatus="st">
+                    <ui:fragment rendered="#{st.index lt 4}">
+                        <ui:include src="/WEB-INF/templates/product-card.xhtml">
+                            <ui:param name="prod" value="#{p}"/>
+                        </ui:include>
+                    </ui:fragment>
+                </ui:repeat>
+            </div>
+        </section>
+
+    </ui:define>
+</ui:composition>

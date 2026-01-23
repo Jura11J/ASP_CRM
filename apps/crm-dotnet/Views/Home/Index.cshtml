@@ -1,0 +1,126 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    var pl = CultureInfo.GetCultureInfo("pl-PL");
+    var labels = System.Text.Json.JsonSerializer.Serialize(Model.SalesChart.Select(c => c.Date.ToString("dd.MM")));
+    var values = System.Text.Json.JsonSerializer.Serialize(Model.SalesChart.Select(c => c.Total));
+
+    string StatusClass(OrderStatus status) => status switch
+    {
+        OrderStatus.New => "badge bg-secondary",
+        OrderStatus.Paid => "badge bg-info text-dark",
+        OrderStatus.Shipped => "badge bg-warning text-dark",
+        OrderStatus.Completed => "badge bg-success",
+        _ => "badge bg-danger"
+    };
+}
+
+<div class="row g-3">
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="text-muted">Klienci</div>
+            <div class="stat-value">@Model.CustomersCount</div>
+            <div class="small text-muted">Łączna liczba klientów</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="text-muted">Aktywne zamówienia</div>
+            <div class="stat-value">@Model.ActiveOrders</div>
+            <div class="small text-muted">New/Paid/Shipped</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="text-muted">Zamówienia w tym miesiącu</div>
+            <div class="stat-value">@Model.OrdersThisMonth</div>
+            <div class="small text-muted">bieżący miesiąc</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card p-3">
+            <div class="text-muted">Wartość sprzedaży</div>
+            <div class="stat-value">@Model.SalesValue.ToString("C", pl)</div>
+            <div class="small text-muted">suma bez anulowanych</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mt-1">
+    <div class="col-lg-7">
+        <div class="card chart-card p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0">Sprzedaż ostatnie 30 dni</h5>
+                <span class="badge badge-soft">Chart.js</span>
+            </div>
+            <canvas id="salesChart" data-labels='@labels' data-values='@values'></canvas>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card h-100 p-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="mb-0">Ostatnie zamówienia</h5>
+                <a class="btn btn-sm btn-outline-primary" asp-controller="Orders" asp-action="Index">Wszystkie</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Klient</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th class="text-end">Suma</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.RecentOrders)
+                        {
+                            <tr>
+                                <td>@order.Id</td>
+                                <td>@order.Customer?.FullName</td>
+                                <td>@order.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                                <td><span class="@StatusClass(order.Status)">@order.Status.GetDisplayName()</span></td>
+                                <td class="text-end">@order.TotalAmount.ToString("C", pl)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const canvas = document.getElementById('salesChart');
+            if (!canvas) return;
+
+            const labels = JSON.parse(canvas.dataset.labels || "[]");
+            const data = JSON.parse(canvas.dataset.values || "[]");
+
+            new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Sprzedaż (PLN)',
+                        data,
+                        borderColor: '#2563eb',
+                        backgroundColor: 'rgba(37,99,235,0.15)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { callback: value => value + ' zł' } }
+                    }
+                }
+            });
+        })();
+    </script>
+}

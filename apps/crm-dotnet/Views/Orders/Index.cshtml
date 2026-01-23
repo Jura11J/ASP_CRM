@@ -1,0 +1,93 @@
+﻿@model OrderListViewModel
+@{
+    var pl = System.Globalization.CultureInfo.GetCultureInfo("pl-PL");
+    ViewData["Title"] = "Zamówienia";
+    string StatusClass(OrderStatus status) => status switch
+    {
+        OrderStatus.New => "badge bg-secondary",
+        OrderStatus.Paid => "badge bg-info text-dark",
+        OrderStatus.Shipped => "badge bg-warning text-dark",
+        OrderStatus.Completed => "badge bg-success",
+        _ => "badge bg-danger"
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="mb-0">Zamówienia</h2>
+        <p class="text-muted">Lista z filtrami statusu i daty</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Create"><i class="bi bi-plus-lg me-1"></i>Nowe zamówienie</a>
+</div>
+
+<form class="card p-3 mb-3" method="get">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Klient</label>
+            <select class="form-select" name="customerId">
+                <option value="">Wszyscy</option>
+                @foreach (var c in Model.Customers)
+                {
+                    <option value="@c.Value" selected="@(Model.CustomerId?.ToString() == c.Value)">@c.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" name="status">
+                <option value="">Dowolny</option>
+                @foreach (OrderStatus status in Enum.GetValues(typeof(OrderStatus)))
+                {
+                    <option value="@status" selected="@(Model.Status == status)">@status.GetDisplayName()</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Data od</label>
+            <input class="form-control" type="date" name="fromDate" value="@(Model.FromDate?.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">Data do</label>
+            <input class="form-control" type="date" name="toDate" value="@(Model.ToDate?.ToString("yyyy-MM-dd"))" />
+        </div>
+        <div class="col-md-2 text-end">
+            <button class="btn btn-outline-primary mt-3" type="submit">Filtruj</button>
+        </div>
+    </div>
+</form>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Klient</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th class="text-end">Suma</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model.Orders)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.Customer?.FullName</td>
+                        <td>@order.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td><span class="@StatusClass(order.Status)">@order.Status.GetDisplayName()</span></td>
+                        <td class="text-end">@order.TotalAmount.ToString("C", pl)</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@order.Id">Szczegóły</a>
+                                <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@order.Id">Edytuj</a>
+                                <button class="btn btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-url="@Url.Action("Delete", new { id = order.Id })">Usuń</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

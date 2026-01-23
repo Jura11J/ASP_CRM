@@ -1,0 +1,96 @@
+﻿<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/layout.xhtml">
+    <ui:define name="title">Kasa</ui:define>
+    <ui:define name="content">
+        <h:panelGroup rendered="#{empty cartBean.items}">
+            <div class="alert alert-info">Koszyk jest pusty. <a href="index.jsf">Dodaj produkty</a>.</div>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{not empty cartBean.items}">
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p class="eyebrow mb-1">Krok 1</p>
+                            <h4 class="card-title mb-3">Dane klienta</h4>
+                            <h:form styleClass="row g-3">
+                                <div class="col-md-6">
+                                    <h:outputLabel for="firstName" value="Imię" styleClass="form-label"/>
+                                    <h:inputText id="firstName" value="#{checkoutBean.firstName}" required="true" styleClass="form-control"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <h:outputLabel for="lastName" value="Nazwisko" styleClass="form-label"/>
+                                    <h:inputText id="lastName" value="#{checkoutBean.lastName}" required="true" styleClass="form-control"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <h:outputLabel for="email" value="E-mail" styleClass="form-label"/>
+                                    <h:inputText id="email" value="#{checkoutBean.email}" required="true" styleClass="form-control"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <h:outputLabel for="phone" value="Telefon" styleClass="form-label"/>
+                                    <h:inputText id="phone" value="#{checkoutBean.phone}" styleClass="form-control"/>
+                                </div>
+                                <div class="col-md-8">
+                                    <h:outputLabel for="address" value="Adres" styleClass="form-label"/>
+                                    <h:inputText id="address" value="#{checkoutBean.addressLine1}" styleClass="form-control"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <h:outputLabel for="city" value="Miasto" styleClass="form-label"/>
+                                    <h:inputText id="city" value="#{checkoutBean.city}" styleClass="form-control"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <h:outputLabel for="contact" value="Preferowany kontakt" styleClass="form-label"/>
+                                    <h:selectOneMenu id="contact" value="#{checkoutBean.preferredContactMethod}" styleClass="form-select">
+                                        <f:selectItem itemLabel="E-mail" itemValue="Email"/>
+                                        <f:selectItem itemLabel="Telefon" itemValue="Phone"/>
+                                        <f:selectItem itemLabel="Inny" itemValue="Other"/>
+                                    </h:selectOneMenu>
+                                </div>
+                                <div class="col-md-6 form-check mt-4">
+                                    <h:selectBooleanCheckbox id="marketing" value="#{checkoutBean.marketingConsent}" styleClass="form-check-input"/>
+                                    <h:outputLabel for="marketing" value="Zgoda marketingowa" styleClass="form-check-label"/>
+                                </div>
+                                <div class="col-12">
+                                    <h:commandButton value="Złóż zamówienie" action="#{checkoutBean.placeOrder}" styleClass="btn btn-success"/>
+                                    <span class="text-muted ms-3">Po złożeniu zamówienia otrzymasz numer potwierdzenia.</span>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+
+                    <h:panelGroup rendered="#{checkoutBean.confirmed}">
+                        <div class="alert alert-success mt-3">
+                            Zamówienie zostało przyjęte. Numer zamówienia: <strong>#{checkoutBean.confirmationOrderId}</strong>.
+                            <a href="orders.jsf?email=#{checkoutBean.email}">Sprawdź status</a>
+                        </div>
+                    </h:panelGroup>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p class="eyebrow mb-1">Krok 2</p>
+                            <h4 class="card-title mb-3">Podsumowanie koszyka</h4>
+                            <ul class="list-group list-group-flush mb-3">
+                                <ui:repeat value="#{cartBean.items}" var="line">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>#{line.name} <small class="text-muted">x#{line.quantity}</small></span>
+                                        <span>#{line.lineTotal} zł</span>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                            <div class="d-flex justify-content-between fs-5 fw-bold">
+                                <span>Razem</span>
+                                <span>#{cartBean.total} zł</span>
+                            </div>
+                            <a href="cart.jsf" class="btn btn-link mt-3">Edytuj koszyk</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

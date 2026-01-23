@@ -1,0 +1,66 @@
+﻿<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/layout.xhtml">
+    <ui:define name="title">Moje zamówienia</ui:define>
+    <ui:define name="content">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h:form styleClass="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <h:outputLabel for="email" value="E-mail" styleClass="form-label"/>
+                        <h:inputText id="email" value="#{orderLookupBean.email}" required="true" styleClass="form-control"/>
+                    </div>
+                    <div class="col-md-3">
+                        <h:outputLabel for="orderId" value="Numer zamówienia (opcjonalnie)" styleClass="form-label"/>
+                        <h:inputText id="orderId" value="#{orderLookupBean.orderId}" styleClass="form-control"/>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <h:commandButton value="Szukaj" action="#{orderLookupBean.search}" styleClass="btn btn-primary"/>
+                    </div>
+                </h:form>
+            </div>
+        </div>
+
+        <ui:repeat value="#{orderLookupBean.orders}" var="order">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-1">Zamówienie ##{order.id}</h5>
+                            <small class="text-secondary">Data: #{order.createdAt}</small>
+                        </div>
+                        <span class="badge-status #{order.status}">#{order.status}</span>
+                    </div>
+                    <hr/>
+                    <div class="row g-3">
+                        <div class="col-md-7">
+                            <h6>Pozycje</h6>
+                            <ul class="list-group list-group-flush">
+                                <ui:repeat value="#{order.items}" var="item">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>#{item.product.name} <small class="text-muted">x#{item.quantity}</small></span>
+                                        <span>#{item.lineTotal} zł</span>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </div>
+                        <div class="col-md-5">
+                            <h6>Statusy</h6>
+                            <ul class="list-group list-group-flush">
+                                <ui:repeat value="#{order.statusHistory}" var="hist">
+                                    <li class="list-group-item d-flex justify-content-between">
+                                        <span>#{hist.status}</span>
+                                        <span class="text-secondary">#{hist.changedAt}</span>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                            <div class="mt-3 fw-bold">Suma: #{order.totalAmount} zł</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ui:repeat>
+    </ui:define>
+</ui:composition>

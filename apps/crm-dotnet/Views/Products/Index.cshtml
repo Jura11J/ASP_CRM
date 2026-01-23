@@ -1,0 +1,81 @@
+@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Produkty";
+}
+
+@{
+    var pl = CultureInfo.GetCultureInfo("pl-PL");
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="mb-0">Produkty</h2>
+        <p class="text-muted">Katalog produktów sklepu</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Create"><i class="bi bi-plus-lg me-1"></i>Dodaj produkt</a>
+</div>
+
+<form class="card p-3 mb-3" method="get">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-6">
+            <label class="form-label">Szukaj</label>
+            <input class="form-control" type="text" name="search" value="@ViewBag.Search" placeholder="Nazwa lub SKU" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" name="status">
+                <option value="">Wszystkie</option>
+                <option value="active" selected="@(ViewBag.Status == "active")">Aktywne</option>
+                <option value="inactive" selected="@(ViewBag.Status == "inactive")">Nieaktywne</option>
+            </select>
+        </div>
+        <div class="col-md-3 text-end">
+            <button class="btn btn-outline-primary mt-3" type="submit">Filtruj</button>
+        </div>
+    </div>
+</form>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Nazwa</th>
+                    <th>SKU</th>
+                    <th>Cena</th>
+                    <th>Stan</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@item.Name</td>
+                        <td>@item.Sku</td>
+                        <td>@item.Price.ToString("C", pl)</td>
+                        <td>@item.StockQuantity</td>
+                        <td>
+                            @if (item.IsActive)
+                            {
+                                <span class="badge bg-success">Aktywny</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Nieaktywny</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">Szczegóły</a>
+                                <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Edytuj</a>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-url="@Url.Action("Delete", new { id = item.Id })">Usuń</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

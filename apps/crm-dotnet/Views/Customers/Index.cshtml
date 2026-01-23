@@ -1,0 +1,77 @@
+@model IEnumerable<Customer>
+@{
+    ViewData["Title"] = "Klienci";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="mb-0">Klienci</h2>
+        <p class="text-muted">Lista klientów sklepu z filtrami statusu</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Create"><i class="bi bi-plus-lg me-1"></i>Dodaj klienta</a>
+</div>
+
+<form class="card p-3 mb-3" method="get">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-6">
+            <label class="form-label">Szukaj</label>
+            <input class="form-control" type="text" name="search" value="@ViewBag.Search" placeholder="Imię, nazwisko, email" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" name="status">
+                <option value="">Wszyscy</option>
+                <option value="active" selected="@(ViewBag.Status == "active")">Aktywni</option>
+                <option value="blocked" selected="@(ViewBag.Status == "blocked")">Zablokowani</option>
+            </select>
+        </div>
+        <div class="col-md-3 text-end">
+            <button type="submit" class="btn btn-outline-primary mt-3">Filtruj</button>
+        </div>
+    </div>
+</form>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Klient</th>
+                    <th>Email</th>
+                    <th>Telefon</th>
+                    <th>Status</th>
+                    <th>Data utworzenia</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@item.FullName</td>
+                        <td>@item.Email</td>
+                        <td>@item.Phone</td>
+                        <td>
+                            @if (item.IsActive)
+                            {
+                                <span class="badge bg-success">Aktywny</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Zablokowany</span>
+                            }
+                        </td>
+                        <td>@item.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@item.Id">Szczegóły</a>
+                                <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Id">Edytuj</a>
+                                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-url="@Url.Action("Delete", new { id = item.Id })">Usuń</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+﻿<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/layout.xhtml">
+    <ui:define name="title">Moje konto</ui:define>
+    <ui:define name="content">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <p class="eyebrow text-uppercase mb-1">Twoje dane</p>
+                                <h4 class="card-title mb-0">Logowanie / profil</h4>
+                            </div>
+                            <h:panelGroup rendered="#{authBean.loggedIn}" styleClass="ms-2">
+                                <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#ticketForm" aria-expanded="false">
+                                    <i class="bi bi-life-preserver me-1"></i> Zgłoś problem
+                                </button>
+                            </h:panelGroup>
+                        </div>
+                        <h:form styleClass="row g-3">
+                            <div class="col-md-6">
+                                <h:outputLabel for="email" value="E-mail" styleClass="form-label"/>
+                                <h:inputText id="email" value="#{authBean.email}" required="true" styleClass="form-control"/>
+                            </div>
+                            <div class="col-md-6">
+                                <h:outputLabel for="password" value="Hasło (logowanie)" styleClass="form-label"/>
+                                <h:inputSecret id="password" value="#{authBean.password}" styleClass="form-control"/>
+                            </div>
+                            <div class="col-md-6">
+                                <h:outputLabel for="firstName" value="Imię" styleClass="form-label"/>
+                                <h:inputText id="firstName" value="#{authBean.firstName}" required="true" styleClass="form-control"/>
+                            </div>
+                            <div class="col-md-6">
+                                <h:outputLabel for="lastName" value="Nazwisko" styleClass="form-label"/>
+                                <h:inputText id="lastName" value="#{authBean.lastName}" required="true" styleClass="form-control"/>
+                            </div>
+                            <div class="col-md-6">
+                                <h:outputLabel for="phone" value="Telefon" styleClass="form-label"/>
+                                <h:inputText id="phone" value="#{authBean.phone}" styleClass="form-control"/>
+                            </div>
+                            <div class="col-md-6">
+                                <h:outputLabel for="contact" value="Preferowany kontakt" styleClass="form-label"/>
+                                <h:selectOneMenu id="contact" value="#{authBean.preferredContact}" styleClass="form-select">
+                                    <f:selectItem itemLabel="E-mail" itemValue="Email"/>
+                                    <f:selectItem itemLabel="Telefon" itemValue="Phone"/>
+                                </h:selectOneMenu>
+                            </div>
+                            <div class="col-md-8">
+                                <h:outputLabel for="address" value="Adres" styleClass="form-label"/>
+                                <h:inputText id="address" value="#{authBean.address}" styleClass="form-control"/>
+                            </div>
+                            <div class="col-md-4">
+                                <h:outputLabel for="city" value="Miasto" styleClass="form-label"/>
+                                <h:inputText id="city" value="#{authBean.city}" styleClass="form-control"/>
+                            </div>
+                            <div class="col-md-6 form-check mt-2">
+                                <h:selectBooleanCheckbox id="marketing" value="#{authBean.marketingConsent}" styleClass="form-check-input"/>
+                                <h:outputLabel for="marketing" value="Zgoda marketingowa" styleClass="form-check-label"/>
+                            </div>
+                            <div class="col-md-6"></div>
+                            <div class="col-md-6">
+                                <h:outputLabel for="newPass" value="Nowe hasło (rejestracja/zmiana)" styleClass="form-label"/>
+                                <h:inputSecret id="newPass" value="#{authBean.newPassword}" styleClass="form-control"/>
+                            </div>
+                            <div class="col-md-6">
+                                <h:outputLabel for="repeatPass" value="Powtórz hasło" styleClass="form-label"/>
+                                <h:inputSecret id="repeatPass" value="#{authBean.repeatPassword}" styleClass="form-control"/>
+                            </div>
+                            <div class="col-12 d-flex flex-wrap gap-2">
+                                <h:commandButton value="Zaloguj" action="#{authBean.login}" styleClass="btn btn-outline-primary"/>
+                                <h:commandButton value="Zarejestruj" action="#{authBean.register}" styleClass="btn btn-primary" rendered="#{!authBean.loggedIn}"/>
+                                <h:commandButton value="Zapisz profil" action="#{authBean.updateProfile}" styleClass="btn btn-primary" rendered="#{authBean.loggedIn}"/>
+                                <h:commandButton value="Wyloguj" action="#{authBean.logout}" styleClass="btn btn-outline-secondary" rendered="#{authBean.loggedIn}"/>
+                                <h:commandButton value="Usuń konto" action="#{authBean.deleteAccount}" styleClass="btn btn-outline-danger" rendered="#{authBean.loggedIn}"/>
+                            </div>
+                        </h:form>
+
+                        <ui:fragment rendered="#{authBean.loggedIn}">
+                            <div class="collapse mt-4" id="ticketForm">
+                                <div class="card card-body border-0 shadow-sm">
+                                    <h5 class="mb-3">Zgłoszenie do CRM</h5>
+                                    <h:form styleClass="row g-3">
+                                        <div class="col-12">
+                                            <h:outputLabel for="tTitle" value="Tytuł" styleClass="form-label"/>
+                                            <h:inputText id="tTitle" value="#{ticketFormBean.title}" required="true" styleClass="form-control"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h:outputLabel for="tPriority" value="Priorytet" styleClass="form-label"/>
+                                            <h:selectOneMenu id="tPriority" value="#{ticketFormBean.priority}" styleClass="form-select">
+                                                <f:selectItem itemValue="low" itemLabel="Niski"/>
+                                                <f:selectItem itemValue="medium" itemLabel="Średni"/>
+                                                <f:selectItem itemValue="high" itemLabel="Wysoki"/>
+                                            </h:selectOneMenu>
+                                        </div>
+                                        <div class="col-12">
+                                            <h:outputLabel for="tDesc" value="Opis" styleClass="form-label"/>
+                                            <h:inputTextarea id="tDesc" value="#{ticketFormBean.description}" styleClass="form-control" rows="4" required="true"/>
+                                        </div>
+                                        <div class="col-12">
+                                            <h:commandButton value="Wyślij zgłoszenie" action="#{ticketFormBean.submit}" styleClass="btn btn-primary"/>
+                                        </div>
+                                    </h:form>
+                                </div>
+                            </div>
+                        </ui:fragment>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Szybki dostęp</h5>
+                        <ul class="list-unstyled mb-0">
+                            <li><a href="orders.jsf?email=#{authBean.email}">Moje zamówienia</a></li>
+                            <li><a href="checkout.jsf">Kasa</a></li>
+                        </ul>
+                        <p class="text-muted mt-3 small">Pierwsza rejestracja tworzy konto i klienta w bazie. Hasła są haszowane.</p>
+                    </div>
+                </div>
+                <div class="card shadow-sm" >
+                    <div class="card-body d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-muted small mb-1">Pomoc</p>
+                            <h5 class="mb-2">Zgłoś problem do CRM</h5>
+                            <p class="small text-muted">Wyślemy ticket z Twoimi danymi klienta.</p>
+                        </div>
+                        <h:panelGroup rendered="#{authBean.loggedIn}" styleClass="ms-2">
+                            <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#ticketForm">
+                                Otwórz
+                            </button>
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{!authBean.loggedIn}" styleClass="ms-2">
+                            <a class="btn btn-outline-secondary btn-sm" href="register.jsf">Zaloguj się</a>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

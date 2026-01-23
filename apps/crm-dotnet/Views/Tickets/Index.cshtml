@@ -1,0 +1,89 @@
+@model TicketListViewModel
+@{
+    ViewData["Title"] = "Zgłoszenia";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2 class="mb-0">Zgłoszenia</h2>
+        <p class="text-muted">Obsługa wsparcia klienta</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Create"><i class="bi bi-plus-lg me-1"></i>Nowe zgłoszenie</a>
+</div>
+
+<form class="card p-3 mb-3" method="get">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" name="status">
+                <option value="">Dowolny</option>
+                @foreach (TicketStatus status in Enum.GetValues(typeof(TicketStatus)))
+                {
+                    <option value="@status" selected="@(Model.Status == status)">@status.GetDisplayName()</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Priorytet</label>
+            <select class="form-select" name="priority">
+                <option value="">Dowolny</option>
+                @foreach (TicketPriority priority in Enum.GetValues(typeof(TicketPriority)))
+                {
+                    <option value="@priority" selected="@(Model.Priority == priority)">@priority.GetDisplayName()</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Klient</label>
+            <select class="form-select" name="customerId">
+                <option value="">Wszyscy</option>
+                @foreach (var customer in Model.Customers)
+                {
+                    <option value="@customer.Value" selected="@(Model.CustomerId?.ToString() == customer.Value)">@customer.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3 text-end">
+            <button class="btn btn-outline-primary mt-3" type="submit">Filtruj</button>
+        </div>
+    </div>
+</form>
+
+<div class="card p-3">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Tytuł</th>
+                    <th>Klient</th>
+                    <th>Priorytet</th>
+                    <th>Status</th>
+                    <th>Data</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ticket in Model.Tickets)
+                {
+                    <tr>
+                        <td class="fw-semibold">@ticket.Title</td>
+                        <td>@ticket.Customer?.FullName</td>
+                        <td><span class="badge bg-warning text-dark">@ticket.Priority.GetDisplayName()</span></td>
+                        <td><span class="badge bg-info text-dark">@ticket.Status.GetDisplayName()</span></td>
+                        <td>@ticket.CreatedAt.ToLocalTime().ToString("dd.MM.yyyy")</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a class="btn btn-outline-primary" asp-action="Details" asp-route-id="@ticket.Id">Szczegóły</a>
+                                <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@ticket.Id">Edytuj</a>
+                                <button class="btn btn-outline-danger" type="button" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal" data-url="@Url.Action("Delete", new { id = ticket.Id })">Usuń</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+@{
+    var pl = CultureInfo.GetCultureInfo("pl-PL");
+}

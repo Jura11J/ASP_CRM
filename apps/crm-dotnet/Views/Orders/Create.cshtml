@@ -1,0 +1,103 @@
+﻿@model OrderFormViewModel
+@{
+    var pl = System.Globalization.CultureInfo.GetCultureInfo("pl-PL");
+    ViewData["Title"] = "Nowe zamówienie";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0">Nowe zamówienie</h2>
+    <a class="btn btn-outline-secondary" asp-action="Index">Powrót</a>
+</div>
+
+<div class="card p-4">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="CustomerId" class="form-label"></label>
+                <select asp-for="CustomerId" class="form-select" asp-items="Model.CustomerOptions">
+                    <option value="">-- wybierz klienta --</option>
+                </select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Status" class="form-label"></label>
+                <select asp-for="Status" class="form-select">
+                    @foreach (OrderStatus status in Enum.GetValues(typeof(OrderStatus)))
+                    {
+                        <option value="@status">@status.GetDisplayName()</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="form-section-title">Pozycje zamówienia</div>
+                <button type="button" class="btn btn-outline-primary btn-sm" id="addOrderItem"><i class="bi bi-plus-lg me-1"></i>Dodaj pozycję</button>
+            </div>
+            <span class="text-danger" asp-validation-for="Items"></span>
+            <div id="orderItemsContainer" data-order-items class="d-flex flex-column gap-2">
+                @for (int i = 0; i < Model.Items.Count; i++)
+                {
+                    <div class="order-item-row" data-index="@i">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-7">
+                                <label class="form-label">Produkt</label>
+                                <select class="form-select" name="Items[@i].ProductId">
+                                    <option value="">-- wybierz --</option>
+                                    @foreach (var product in Model.Products)
+                                    {
+                                        <option value="@product.Id" selected="@(product.Id == Model.Items[i].ProductId)">
+                                            @product.Name (@product.Price.ToString("C", pl))
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Ilość</label>
+                                <input class="form-control" type="number" name="Items[@i].Quantity" value="@Model.Items[i].Quantity" min="1" />
+                            </div>
+                            <div class="col-md-2 d-grid">
+                                <button type="button" class="btn btn-outline-danger remove-item">Usuń</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end gap-2">
+            <a class="btn btn-outline-secondary" asp-action="Index">Anuluj</a>
+            <button class="btn btn-primary" type="submit">Zapisz zamówienie</button>
+        </div>
+    </form>
+</div>
+
+<template id="orderItemTemplate">
+    <div class="order-item-row" data-index="__index__">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-7">
+                <label class="form-label">Produkt</label>
+                <select class="form-select" name="Items[__index__].ProductId">
+                    <option value="">-- wybierz --</option>
+                    @foreach (var product in Model.Products)
+                    {
+                        <option value="@product.Id">@product.Name (@product.Price.ToString("C", pl))</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Ilość</label>
+                <input class="form-control" type="number" name="Items[__index__].Quantity" value="1" min="1" />
+            </div>
+            <div class="col-md-2 d-grid">
+                <button type="button" class="btn btn-outline-danger remove-item">Usuń</button>
+            </div>
+        </div>
+    </div>
+</template>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

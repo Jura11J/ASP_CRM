@@ -1,0 +1,68 @@
+﻿<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                template="/WEB-INF/templates/layout.xhtml">
+    <ui:define name="title">Koszyk</ui:define>
+    <ui:define name="content">
+        <h:panelGroup rendered="#{empty cartBean.items}">
+            <div class="alert alert-info">Koszyk jest pusty. <a href="index.jsf">Wróć do sklepu</a>.</div>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{not empty cartBean.items}">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <p class="eyebrow mb-1">Twój koszyk</p>
+                            <h3 class="mb-0">Pozycje</h3>
+                        </div>
+                        <div class="fs-5 fw-bold">Razem: #{cartBean.total} zł</div>
+                    </div>
+                    <h:form>
+                        <table class="table align-middle">
+                            <thead>
+                            <tr>
+                                <th>Produkt</th>
+                                <th>SKU</th>
+                                <th class="text-end">Cena</th>
+                                <th style="width:170px;">Ilość</th>
+                                <th class="text-end">Suma</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <ui:repeat value="#{cartBean.items}" var="item">
+                                <tr>
+                                    <td>#{item.name}</td>
+                                    <td><span class="badge bg-secondary">#{item.sku}</span></td>
+                                    <td class="text-end">#{item.unitPrice} zł</td>
+                                    <td>
+                                        <div class="input-group input-group-sm">
+                                            <h:inputText value="#{item.quantity}" styleClass="form-control text-center" size="2"/>
+                                            <h:commandButton value="Aktualizuj" action="#{cartBean.updateQuantity(item.productId, item.quantity)}" styleClass="btn btn-outline-secondary"/>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">#{item.lineTotal} zł</td>
+                                    <td class="text-end">
+                                        <h:commandLink value="Usuń" action="#{cartBean.remove(item.productId)}" styleClass="text-danger" onclick="return confirm('Usunąć pozycję?');"/>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex gap-2">
+                                <a href="index.jsf" class="btn btn-link">Kontynuuj zakupy</a>
+                                <h:commandButton value="Wyczyść koszyk" action="#{cartBean.clear}" styleClass="btn btn-outline-danger" onclick="return confirm('Wyczyścić koszyk?');"/>
+                            </div>
+                            <div class="d-flex align-items-center gap-3">
+                                <a href="checkout.jsf" class="btn btn-success">Przejdź do kasy</a>
+                            </div>
+                        </div>
+                    </h:form>
+                </div>
+            </div>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>
