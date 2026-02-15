@@ -5,8 +5,8 @@ Thumbs.db
 .idea/
 
 # Dotnet build
-*/bin/
-*/obj/
+**/bin/
+**/obj/
 *.user
 *.rsuser
 *.suo
@@ -31,6 +31,8 @@ packages/
 *.pid
 *.tar
 _tmp*/
+archive/
+_tmp_shop.html
 
 # Coverage / test
 coverage/
@@ -38,8 +40,10 @@ TestResults/
 
 # Local data
 infra/pgdata/
+apps/crm-dotnet/aspcrm.db
+apps/crm-dotnet/aspcrm.db-shm
+apps/crm-dotnet/aspcrm.db-wal
 
 # OS generated
 ehthumbs.db
 Icon?
-
