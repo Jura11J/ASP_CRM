@@ -146,3 +146,21 @@ body {
 
 /* cards spacing in product grid */
 .product-card .card { border-radius: 14px; }
+
+.chat-card {
+    min-height: 68vh;
+}
+
+.chat-window {
+    max-height: 65vh;
+    overflow: auto;
+}
+
+.chat-bubble {
+    max-width: min(80%, 720px);
+    white-space: pre-wrap;
+}
+
+.white-space-prewrap {
+    white-space: pre-wrap;
+}

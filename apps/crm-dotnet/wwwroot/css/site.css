@@ -116,6 +116,19 @@ body {
   padding-left: 1rem;
 }
 
+.chat-bubble {
+  max-width: min(80%, 720px);
+  white-space: pre-wrap;
+}
+
+#chatMessages {
+  max-height: 65vh;
+}
+
+.white-space-prewrap {
+  white-space: pre-wrap;
+}
+
 @media (max-width: 991px) {
   .sidebar {
     width: 100%;

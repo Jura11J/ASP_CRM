@@ -51,6 +51,9 @@ public class CustomerEntity implements Serializable {
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<OrderEntity> orders = new ArrayList<>();
 
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<ChatConversationEntity> chatConversations = new ArrayList<>();
+
     @PrePersist
     public void prePersist() {
         if (createdAt == null) {
@@ -154,5 +157,9 @@ public class CustomerEntity implements Serializable {
 
     public List<OrderEntity> getOrders() {
         return orders;
+    }
+
+    public List<ChatConversationEntity> getChatConversations() {
+        return chatConversations;
     }
 }

@@ -10,6 +10,8 @@
         <class>com.aspcrm.shop.entity.OrderItemEntity</class>
         <class>com.aspcrm.shop.entity.OrderStatusHistoryEntity</class>
         <class>com.aspcrm.shop.entity.ShopUser</class>
+        <class>com.aspcrm.shop.entity.ChatConversationEntity</class>
+        <class>com.aspcrm.shop.entity.ChatMessageEntity</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://db:5432/aspcrm"/>

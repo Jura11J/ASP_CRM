@@ -19,6 +19,8 @@ namespace AspCrm.Data
         public DbSet<Ticket> Tickets => Set<Ticket>();
         public DbSet<TicketComment> TicketComments => Set<TicketComment>();
         public DbSet<CustomerNote> CustomerNotes => Set<CustomerNote>();
+        public DbSet<ChatConversation> ChatConversations => Set<ChatConversation>();
+        public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,6 +67,35 @@ namespace AspCrm.Data
                 .HasOne(c => c.Ticket)
                 .WithMany(t => t.Comments)
                 .HasForeignKey(c => c.TicketId);
+
+            modelBuilder.Entity<ChatConversation>()
+                .HasOne(c => c.Customer)
+                .WithMany(c => c.ChatConversations)
+                .HasForeignKey(c => c.CustomerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ChatConversation>()
+                .HasIndex(c => c.CustomerId)
+                .IsUnique();
+
+            modelBuilder.Entity<ChatConversation>()
+                .Property(c => c.LastMessagePreview)
+                .HasMaxLength(200);
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne(m => m.Conversation)
+                .WithMany(c => c.Messages)
+                .HasForeignKey(m => m.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasOne<IdentityUser>()
+                .WithMany()
+                .HasForeignKey(m => m.SenderCrmUserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<ChatMessage>()
+                .HasIndex(m => new { m.ConversationId, m.Id });
 
             ConfigureDecimals(modelBuilder);
         }

@@ -48,6 +48,7 @@ namespace AspCrm.Models
         public ICollection<Order> Orders { get; set; } = new List<Order>();
         public ICollection<CustomerNote> Notes { get; set; } = new List<CustomerNote>();
         public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+        public ICollection<ChatConversation> ChatConversations { get; set; } = new List<ChatConversation>();
 
         public string FullName => $"{FirstName} {LastName}";
     }

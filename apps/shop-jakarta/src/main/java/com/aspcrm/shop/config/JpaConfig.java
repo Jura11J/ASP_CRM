@@ -23,7 +23,7 @@ public class JpaConfig {
         props.put("jakarta.persistence.jdbc.user", env("DB_USER", "postgres"));
         props.put("jakarta.persistence.jdbc.password", env("DB_PASSWORD", "postgres"));
         props.put("jakarta.persistence.jdbc.driver", env("DB_DRIVER", "org.postgresql.Driver"));
-        props.put("hibernate.hbm2ddl.auto", env("HIBERNATE_DDL_AUTO", "update"));
+        props.put("hibernate.hbm2ddl.auto", env("HIBERNATE_DDL_AUTO", "validate"));
         props.put("hibernate.dialect", env("HIBERNATE_DIALECT", "org.hibernate.dialect.PostgreSQLDialect"));
         props.put("hibernate.show_sql", env("HIBERNATE_SHOW_SQL", "false"));
         props.put("hibernate.format_sql", "true");

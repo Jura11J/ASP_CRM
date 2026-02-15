@@ -23,6 +23,7 @@
                 <li class="nav-item"><a class="nav-link" href="products.jsf">Produkty</a></li>
                 <ui:fragment rendered="#{authBean.loggedIn}">
                     <li class="nav-item"><a class="nav-link" href="orders.jsf">Moje zamówienia</a></li>
+                    <li class="nav-item"><a class="nav-link" href="chat.jsf">Czat live</a></li>
                     <li class="nav-item"><a class="nav-link" href="account.jsf">Moje konto</a></li>
                 </ui:fragment>
             </ul>
@@ -58,6 +59,7 @@
                             </div>
                             <div class="d-grid gap-2">
                                 <a class="btn btn-outline-primary" href="orders.jsf">Moje zamówienia</a>
+                                <a class="btn btn-outline-primary" href="chat.jsf">Czat live</a>
                                 <a class="btn btn-outline-primary" href="account.jsf">Moje konto</a>
                                 <h:form>
                                     <h:commandButton value="Wyloguj" action="#{authBean.logout}" styleClass="btn btn-danger w-100"/>
