@@ -18,6 +18,7 @@ namespace AspCrm.Controllers
             _context = context;
         }
 
+        // Naklada filtry listy i buduje model danych dla widoku zamowien.
         public async Task<IActionResult> Index(OrderStatus? status, int? customerId, DateTime? fromDate, DateTime? toDate)
         {
             var query = _context.Orders
@@ -66,6 +67,7 @@ namespace AspCrm.Controllers
             return View(vm);
         }
 
+        // Laduje szczegoly zamowienia razem z pozycjami, klientem i historia statusow.
         public async Task<IActionResult> Details(int id)
         {
             var order = await _context.Orders
@@ -97,6 +99,7 @@ namespace AspCrm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Waliduje dane, buduje pozycje zamowienia i zapisuje status poczatkowy.
         public async Task<IActionResult> Create(OrderFormViewModel model)
         {
             model.Items = (model.Items ?? new List<OrderItemInput>()).Where(i => i.ProductId > 0 && i.Quantity > 0).ToList();
@@ -161,6 +164,7 @@ namespace AspCrm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Przebudowuje pozycje i dopisuje wpis historii, gdy status ulegl zmianie.
         public async Task<IActionResult> Edit(int id, OrderFormViewModel model)
         {
             if (id != model.Id)
@@ -249,6 +253,7 @@ namespace AspCrm.Controllers
             }
         }
 
+        // Zamienia wiersze formularza na pozycje zamowienia i wylicza laczna kwote.
         private async Task<decimal> BuildOrderItems(OrderFormViewModel model, Order order)
         {
             decimal total = 0;

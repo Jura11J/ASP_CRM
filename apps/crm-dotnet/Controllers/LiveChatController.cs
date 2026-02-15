@@ -21,6 +21,7 @@ namespace AspCrm.Controllers
             _userManager = userManager;
         }
 
+        // Buduje model strony czatu: lista rozmow, wybrana konwersacja i wiadomosci.
         public async Task<IActionResult> Index(int? conversationId)
         {
             var conversations = await _context.ChatConversations
@@ -72,6 +73,7 @@ namespace AspCrm.Controllers
         }
 
         [HttpGet]
+        // Zwraca skrot listy rozmow (do odswiezania panelu bocznego).
         public async Task<IActionResult> ConversationsSummary()
         {
             var conversations = await _context.ChatConversations
@@ -84,6 +86,7 @@ namespace AspCrm.Controllers
         }
 
         [HttpGet]
+        // Zwraca nowe wiadomosci i oznacza nieprzeczytane wiadomosci klienta jako przeczytane.
         public async Task<IActionResult> ConversationMessages(int id, int? afterId)
         {
             var conversation = await _context.ChatConversations
@@ -134,6 +137,7 @@ namespace AspCrm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Zapisuje odpowiedz CRM i aktualizuje podglad ostatniej wiadomosci w konwersacji.
         public async Task<IActionResult> SendMessage(int id, [FromForm] string content)
         {
             var conversation = await _context.ChatConversations
@@ -220,6 +224,7 @@ namespace AspCrm.Controllers
             await _context.SaveChangesAsync();
         }
 
+        // Sklada dane do listy rozmow: liczniki nieprzeczytanych i metadane ostatniej wiadomosci.
         private async Task<IList<ChatConversationListItemVm>> BuildConversationListAsync(List<ChatConversation> conversations, int? selectedId = null)
         {
             if (conversations.Count == 0)
@@ -262,6 +267,7 @@ namespace AspCrm.Controllers
                 .ToList();
         }
 
+        // Wyznacza ostatnia wiadomosc dla kazdej konwersacji razem z czasem i podgladem tresci.
         private async Task<Dictionary<int, (string Preview, DateTime SentAt)>> GetLastMessageMetaAsync(List<int> conversationIds)
         {
             var lastIds = await _context.ChatMessages
@@ -287,6 +293,7 @@ namespace AspCrm.Controllers
                 m => (BuildPreview(m.Content), m.SentAt));
         }
 
+        // Mapuje encje wiadomosci do modelu widoku i uzupelnia etykiety nadawcow.
         private async Task<IList<ChatMessageVm>> MapMessagesAsync(List<ChatMessage> messages, Customer customer, string currentUserId)
         {
             var crmIds = messages

@@ -17,6 +17,7 @@ namespace AspCrm.Controllers
             _context = context;
         }
 
+        // Filtruje klientow po tekscie/statusie i zwraca najnowsze rekordy na poczatku.
         public async Task<IActionResult> Index(string? search, string? status)
         {
             var query = _context.Customers.AsQueryable();
@@ -49,6 +50,7 @@ namespace AspCrm.Controllers
             return View(customers);
         }
 
+        // Laduje pelna karte klienta: zamowienia, notatki i zgloszenia.
         public async Task<IActionResult> Details(int id)
         {
             var customer = await _context.Customers
@@ -108,6 +110,7 @@ namespace AspCrm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Aktualizuje dane klienta, pomijajac globalny filtr soft-delete.
         public async Task<IActionResult> Edit(int id, Customer input)
         {
             var customer = await _context.Customers.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == id);
@@ -152,6 +155,7 @@ namespace AspCrm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Dopisuje notatke operatora do osi czasu klienta.
         public async Task<IActionResult> AddNote(CustomerNote note)
         {
             var customer = await _context.Customers.IgnoreQueryFilters().FirstOrDefaultAsync(c => c.Id == note.CustomerId);

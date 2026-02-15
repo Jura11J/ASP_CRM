@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AspCrm")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+39d4298cf7617677d6a302c3036329d76d0a19d1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+41c68792d322b30adf4b64f946a0b615c8153d4a")]
 [assembly: System.Reflection.AssemblyProductAttribute("AspCrm")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AspCrm")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

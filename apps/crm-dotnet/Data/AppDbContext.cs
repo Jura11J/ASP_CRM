@@ -22,6 +22,7 @@ namespace AspCrm.Data
         public DbSet<ChatConversation> ChatConversations => Set<ChatConversation>();
         public DbSet<ChatMessage> ChatMessages => Set<ChatMessage>();
 
+        // Konfiguruje relacje encji, filtry soft-delete oraz ograniczenia specyficzne dla bazy.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

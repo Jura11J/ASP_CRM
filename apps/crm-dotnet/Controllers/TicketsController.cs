@@ -18,6 +18,7 @@ namespace AspCrm.Controllers
             _context = context;
         }
 
+        // Naklada opcjonalne filtry i przygotowuje liste zgloszen z wyborem klienta.
         public async Task<IActionResult> Index(TicketStatus? status, TicketPriority? priority, int? customerId)
         {
             var query = _context.Tickets
@@ -161,6 +162,7 @@ namespace AspCrm.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Dodaje komentarz do zgloszenia, a przy braku autora ustawia wartosc domyslna.
         public async Task<IActionResult> AddComment(int id, string content, string author)
         {
             var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id == id);
