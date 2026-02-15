@@ -9,7 +9,7 @@
 }
 
 <div class="d-flex flex-column gap-3" id="liveChatRoot"
-     data-selected-id="@(selected?.Id?.ToString() ?? string.Empty)"
+     data-selected-id="@(selected?.Id.ToString() ?? string.Empty)"
      data-last-id="@lastMessageId"
      data-is-closed="@isClosed.ToString().ToLowerInvariant()">
 

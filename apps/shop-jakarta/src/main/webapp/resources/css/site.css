@@ -82,6 +82,18 @@ body {
     border: 1px solid rgba(15,23,42,0.08);
     box-shadow: 0 15px 35px rgba(15,23,42,0.12);
 }
+.hero .mini-card .text-light-60 { color: #64748b !important; }
+.hero .mini-card .text-white { color: #0f172a !important; }
+.hero .mini-card .btn-outline-light {
+    color: #334155;
+    border-color: #cbd5e1;
+    background: #fff;
+}
+.hero .mini-card .btn-outline-light:hover {
+    color: #fff;
+    background: #1d4ed8;
+    border-color: #1d4ed8;
+}
 
 .progress-thin { height: 6px; background: rgba(255,255,255,0.2); border-radius: 12px; }
 .progress-thin .progress-bar { background: #22d3ee; }

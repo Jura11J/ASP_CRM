@@ -344,3 +344,4 @@ C:\Users\juras\Documents\Repos\ASP_CRM\apps\crm-dotnet\obj\Debug\net8.0\staticwe
 C:\Users\juras\Documents\Repos\ASP_CRM\apps\crm-dotnet\obj\Debug\net8.0\AspCrm.csproj.Up2Date
 C:\Users\juras\Documents\Repos\ASP_CRM\apps\crm-dotnet\obj\Debug\net8.0\AspCrm.genruntimeconfig.cache
 C:\Users\juras\Documents\Repos\ASP_CRM\apps\crm-dotnet\obj\Debug\net8.0\ref\AspCrm.dll
+C:\Users\juras\Documents\Repos\ASP_CRM\apps\crm-dotnet\obj\Debug\net8.0\AspCrm.sourcelink.json

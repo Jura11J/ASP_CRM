@@ -11,8 +11,9 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace AspCrm.Migrations
 {
+    [DbContext(typeof(AppDbContext))]
     [Migration("20260124101500_LiveChat")]
-    partial class LiveChat : Migration
+    partial class LiveChat
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

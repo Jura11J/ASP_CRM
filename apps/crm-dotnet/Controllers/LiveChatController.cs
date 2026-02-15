@@ -242,10 +242,10 @@ namespace AspCrm.Controllers
                 .ThenByDescending(c => c.LastMessageAt)
                 .Select(c =>
                 {
-                    var meta = lastMessageMeta.TryGetValue(c.Id, out var value) ? value : null;
+                    var hasMeta = lastMessageMeta.TryGetValue(c.Id, out var meta);
                     var preview = !string.IsNullOrWhiteSpace(c.LastMessagePreview)
                         ? c.LastMessagePreview
-                        : meta?.Preview;
+                        : hasMeta ? meta.Preview : null;
 
                     return new ChatConversationListItemVm
                     {
@@ -253,7 +253,7 @@ namespace AspCrm.Controllers
                         CustomerId = c.CustomerId,
                         CustomerName = c.Customer?.FullName ?? "Klient",
                         CustomerEmail = c.Customer?.Email ?? string.Empty,
-                        LastMessageAt = meta?.SentAt ?? c.LastMessageAt,
+                        LastMessageAt = hasMeta ? meta.SentAt : c.LastMessageAt,
                         LastMessagePreview = preview,
                         UnreadCount = unreadCounts.TryGetValue(c.Id, out var count) ? count : 0,
                         IsClosed = c.IsClosed
@@ -262,7 +262,7 @@ namespace AspCrm.Controllers
                 .ToList();
         }
 
-        private async Task<Dictionary<int, (string? Preview, DateTime SentAt)>> GetLastMessageMetaAsync(List<int> conversationIds)
+        private async Task<Dictionary<int, (string Preview, DateTime SentAt)>> GetLastMessageMetaAsync(List<int> conversationIds)
         {
             var lastIds = await _context.ChatMessages
                 .Where(m => conversationIds.Contains(m.ConversationId))
@@ -272,7 +272,7 @@ namespace AspCrm.Controllers
 
             if (lastIds.Count == 0)
             {
-                return new Dictionary<int, (string? Preview, DateTime SentAt)>();
+                return new Dictionary<int, (string Preview, DateTime SentAt)>();
             }
 
             var idLookup = lastIds.ToDictionary(x => x.ConversationId, x => x.LastId);
