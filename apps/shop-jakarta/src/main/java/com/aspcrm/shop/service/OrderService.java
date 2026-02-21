@@ -77,7 +77,7 @@ public class OrderService {
             throw ex;
         }
     }
-
+    // poprawić pobranie plus filtry na pobranych
     public List<OrderEntity> findOrders(String email, Integer orderId) {
         StringBuilder jpql = new StringBuilder("SELECT DISTINCT o FROM OrderEntity o " +
                 "LEFT JOIN FETCH o.items items " +
